@@ -7,413 +7,438 @@
     <style>
         :root {
             --champagne: #F7E7CE;
-            --champagne-orange: rgba(255, 180, 80, 0.5); 
-            --champagne-muted: rgba(247, 231, 206, 0.5);
-            --dark-bg: #0d0d0d;
-            --font-serif: 'Optima', 'Didot', 'Times New Roman', serif;
-            --font-sans: 'Inter', -apple-system, sans-serif;
+            --champagne-glow: rgba(247, 231, 206, 0.6);
+            --deep-bg: #0a0a0c;
+            --accent-orange: #ff9d5c;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Optima', 'Didot', 'Georgia', 'Microsoft YaHei', serif;
+        }
 
         body {
-            background-color: var(--dark-bg);
+            background-color: var(--deep-bg);
             color: var(--champagne);
-            font-family: var(--font-sans);
             overflow-x: hidden;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #butterfly-orb {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-orange) 0%, rgba(255, 157, 92, 0) 70%);
+            filter: blur(60px);
+            opacity: 0.4;
+            z-index: -1;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: moveOrb 15s infinite ease-in-out, breathe 4s infinite ease-in-out;
+        }
+
+        @keyframes moveOrb {
+            0%, 100% { top: 10%; left: 10%; }
+            25% { top: 60%; left: 70%; }
+            50% { top: 40%; left: 20%; }
+            75% { top: 80%; left: 50%; }
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(247, 231, 206, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-style: italic;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .intro-poem {
+            line-height: 2;
+            margin-bottom: 2.5rem;
+            font-size: 1.15rem;
+            white-space: pre-line;
+            opacity: 0.9;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--champagne);
+            color: var(--champagne);
+            padding: 14px 35px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background: var(--champagne);
+            color: var(--deep-bg);
+        }
+
+        .lang-switcher {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .lang-switcher span {
+            cursor: pointer;
+            font-size: 0.85rem;
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+
+        .lang-switcher span.active {
+            opacity: 1;
+            border-bottom: 1px solid var(--champagne);
+        }
+
+        .question-box { display: none; }
+        .question-text {
+            font-size: 1.35rem;
+            margin-bottom: 2.5rem;
+            min-height: 5em;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* 背景动画 */
-        .butterfly-glow {
-            position: fixed;
-            top: 50%; left: 50%;
-            width: 140vw; height: 140vh;
-            background: radial-gradient(circle at center, var(--champagne-orange) 0%, rgba(255, 140, 50, 0.1) 30%, transparent 70%);
-            z-index: -1;
-            filter: blur(80px) drop-shadow(0 0 40px rgba(255, 160, 60, 0.2));
-            animation: breatheGlow 10s infinite alternate ease-in-out;
-            pointer-events: none;
+        .options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            gap: 12px;
         }
 
-        @keyframes breatheGlow {
-            0% { transform: translate(-75%, -75%) scale(0.8) rotate(0deg); opacity: 0.3; }
-            50% { transform: translate(-25%, -35%) scale(1.1) rotate(8deg); opacity: 0.8; }
-            100% { transform: translate(-50%, -55%) scale(1.3) rotate(-5deg); opacity: 0.4; }
+        .option {
+            flex: 1;
+            padding: 20px 10px;
+            border: 1px solid rgba(247, 231, 206, 0.25);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 8px;
         }
 
-        .lang-nav {
-            position: fixed;
-            top: 30px;
+        .option:hover {
+            background: rgba(247, 231, 206, 0.1);
+            border-color: var(--champagne);
+        }
+
+        .option b { font-size: 1.3rem; margin-bottom: 8px; color: var(--accent-orange); }
+        .option span { font-size: 0.75rem; opacity: 0.7; }
+
+        .progress-bar {
+            height: 2px;
+            background: rgba(247, 231, 206, 0.1);
+            width: 100%;
+            margin-bottom: 2.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--champagne);
+            width: 0%;
+            transition: width 0.4s;
+        }
+
+        #result-page { display: none; }
+        .album-cover {
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 2rem;
+            border: 1px solid rgba(247, 231, 206, 0.3);
+            background-size: cover;
+            background-position: center;
+            background-color: #111;
+        }
+
+        .archetype {
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            color: var(--accent-orange);
+            font-weight: 300;
+        }
+
+        /* 优化后的边框设计：去掉了生硬的左边框，改为优雅的卡片质感 */
+        .description {
+            line-height: 1.8;
+            text-align: center; /* 改为居中，增加平衡感 */
+            margin-top: 1.5rem;
+            font-size: 1.05rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(247, 231, 206, 0.15); /* 全包围细边框 */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 增加顶部高光线，提升质感 */
+        .description::before {
+            content: "";
+            position: absolute;
+            top: 0;
             left: 0;
             right: 0;
-            text-align: center;
-            z-index: 100;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(247, 231, 206, 0.4), transparent);
         }
 
-        .container { 
-            width: 95%; 
-            max-width: 850px; 
-            text-align: center; 
-            z-index: 10; 
-            padding: 80px 20px 40px; 
+        @media (max-width: 650px) {
+            .options { flex-direction: column; gap: 8px; }
+            .option { padding: 12px; flex-direction: row; gap: 15px; }
+            h1 { font-size: 1.6rem; }
         }
-        
-        h1 { 
-            font-family: var(--font-serif); 
-            font-size: 2.2rem; 
-            letter-spacing: 4px; 
-            margin-bottom: 12px; 
-            text-transform: uppercase; 
-            font-weight: 300;
-            text-shadow: 0 0 15px rgba(247, 231, 206, 0.3);
-        }
-
-        .subtitle { 
-            font-style: italic; 
-            font-size: 1rem; 
-            color: var(--champagne-muted); 
-            margin-bottom: 40px; 
-            letter-spacing: 2px;
-        }
-
-        .quote { 
-            font-size: 0.9rem; 
-            line-height: 1.8; 
-            margin: 0 auto 50px; 
-            opacity: 0.7; 
-            font-style: italic; 
-            border-left: 2px solid var(--champagne-muted); 
-            padding: 10px 30px; 
-            text-align: left; 
-            max-width: 600px; 
-        }
-
-        .lang-btn { 
-            background: rgba(13, 13, 13, 0.5); 
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--champagne-muted); 
-            color: var(--champagne); 
-            padding: 6px 16px; 
-            margin: 0 6px; 
-            cursor: pointer; 
-            border-radius: 30px; 
-            font-size: 0.75rem; 
-            transition: all 0.3s;
-        }
-        .lang-btn.active { background: var(--champagne); color: var(--dark-bg); border-color: var(--champagne); }
-
-        .card { 
-            background: rgba(20, 20, 20, 0.6); 
-            backdrop-filter: blur(25px); 
-            border: 1px solid rgba(247, 231, 206, 0.15); 
-            padding: 60px 40px; 
-            border-radius: 12px; 
-            min-height: 450px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6); 
-        }
-
-        .q-text { font-size: 1.35rem; margin-bottom: 60px; font-family: var(--font-serif); line-height: 1.6; }
-
-        #q-progress { font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 25px; opacity: 0.5; }
-
-        .scale-box { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        
-        .scale-item { 
-            flex: 1; height: 55px; margin: 0 8px; border: 1px solid var(--champagne-muted); 
-            display: flex; align-items: center; justify-content: center; cursor: pointer; 
-            transition: all 0.4s; font-family: var(--font-serif); border-radius: 8px;
-        }
-
-        .scale-item:hover { background: var(--champagne); color: var(--dark-bg); transform: translateY(-3px); }
-
-        .scale-lbl { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--champagne-muted); text-transform: uppercase; letter-spacing: 1.5px; }
-
-        /* 专辑封面样式 */
-        .album-art { 
-            width: 320px; 
-            height: 320px; 
-            margin: 0 auto 35px; 
-            background-color: #111; 
-            border-radius: 8px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-            background-size: cover; 
-            background-position: center; 
-            border: 1px solid rgba(247, 231, 206, 0.2);
-            transition: background-image 0.5s ease-in-out;
-        }
-
-        .res-name { font-size: 2.6rem; font-family: var(--font-serif); margin-bottom: 10px; font-weight: 300; }
-        .res-arc { font-size: 0.9rem; letter-spacing: 5px; color: var(--champagne-muted); margin-bottom: 35px; text-transform: uppercase; }
-        .res-p { font-size: 1.05rem; line-height: 1.8; max-width: 680px; margin: 0 auto; opacity: 0.9; font-weight: 300; }
-
-        .hidden { display: none; }
-
-        .nav-btn { background: none; border: none; color: var(--champagne-muted); cursor: pointer; font-size: 0.75rem; margin-top: 40px; letter-spacing: 2px; }
-        .retake-btn {
-            background: transparent; border: 1px solid var(--champagne); color: var(--champagne);
-            padding: 15px 40px; margin-top: 60px; border-radius: 50px; cursor: pointer;
-            font-family: var(--font-serif); letter-spacing: 2px; transition: all 0.3s;
-        }
-        .retake-btn:hover { background: var(--champagne); color: var(--dark-bg); }
     </style>
 </head>
 <body>
-    <div class="butterfly-glow"></div>
 
-    <nav class="lang-nav">
-        <button class="lang-btn active" id="btn-en" onclick="changeLang('en')">EN</button>
-        <button class="lang-btn" id="btn-zh" onclick="changeLang('zh')">中文</button>
-        <button class="lang-btn" id="btn-es" onclick="changeLang('es')">ES</button>
-    </nav>
-    
-    <div class="container">
-        <!-- Home -->
-        <div id="home-screen">
-            <h1 id="h-title">which Mariah Carey album are you?</h1>
-            <p class="subtitle">the portrait of my life.</p>
-            <div class="quote">
-                “You look at me and see the girl<br>
-                Who lives inside the golden world<br>
-                But don’t believe<br>
-                That’s all there is to see<br>
-                You’ll never know the real me”
-            </div>
-            <div class="scale-item" id="btn-start" onclick="startTest()" style="max-width: 240px; margin: 0 auto; border-radius: 50px;">ENTER THE WORLD</div>
+<div id="butterfly-orb"></div>
+
+<div class="container">
+    <div class="lang-switcher">
+        <span onclick="setLang('en')" id="lang-en" class="active">EN</span>
+        <span onclick="setLang('zh')" id="lang-zh">ZH</span>
+        <span onclick="setLang('es')" id="lang-es">ES</span>
+    </div>
+
+    <div id="home-page">
+        <h1 id="title-text">which Mariah Carey album are you?</h1>
+        <p class="subtitle" id="subtitle-text">the portrait of my life.</p>
+        <div class="intro-poem" id="intro-poem"></div>
+        <button class="btn" onclick="startQuiz()" id="start-btn">Start the Portrait</button>
+    </div>
+
+    <div id="quiz-page" class="question-box">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options">
+            <div class="option" onclick="handleSelect(1)"><b>1</b> <span id="opt-1"></span></div>
+            <div class="option" onclick="handleSelect(2)"><b>2</b> <span id="opt-2"></span></div>
+            <div class="option" onclick="handleSelect(3)"><b>3</b> <span id="opt-3"></span></div>
+            <div class="option" onclick="handleSelect(4)"><b>4</b> <span id="opt-4"></span></div>
+            <div class="option" onclick="handleSelect(5)"><b>5</b> <span id="opt-5"></span></div>
         </div>
-
-        <!-- Quiz -->
-        <div id="test-screen" class="hidden">
-            <div class="card">
-                <div id="q-progress">1 / 40</div>
-                <div class="q-text" id="q-display">...</div>
-                <div class="scale-box">
-                    <div class="scale-item" onclick="pick(1)">1</div>
-                    <div class="scale-item" onclick="pick(2)">2</div>
-                    <div class="scale-item" onclick="pick(3)">3</div>
-                    <div class="scale-item" onclick="pick(4)">4</div>
-                    <div class="scale-item" onclick="pick(5)">5</div>
-                </div>
-                <div class="scale-lbl">
-                    <span id="lbl-left">Strongly Disagree</span>
-                    <span id="lbl-right">Strongly Agree</span>
-                </div>
-                <div style="text-align: left;">
-                    <button class="nav-btn" onclick="prevQ()" id="btn-back">← BACK</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Result -->
-        <div id="result-screen" class="hidden">
-            <div class="album-art" id="res-img"></div>
-            <h2 class="res-name" id="res-title">Album Name</h2>
-            <div class="res-arc" id="res-arc-text">THE ARCHETYPE</div>
-            <p class="res-p" id="res-body">...</p>
-            <button class="retake-btn" onclick="location.reload()" id="btn-retake">RETAKE TEST</button>
+        <div style="text-align: left;">
+            <button class="btn" style="padding: 8px 18px; font-size: 0.75rem;" onclick="goBack()" id="back-btn">Back</button>
         </div>
     </div>
 
-    <script>
-        // --- 问题数据和逻辑保持不变 ---
-        const questionBank = [
-            { id: 1, v: 'A', t: { en: "You choose a hotel with a historic marble lobby and jazz bar over a modern minimalist installation.", zh: "相比现代极简主义酒店，你更喜欢拥有历史感大理石大堂和爵士酒吧的酒店。", es: "Prefieres un hotel con un vestíbulo de mármol histórico y un bar de jazz antes que una instalación moderna y minimalista." } },
-            { id: 2, v: 'A', t: { en: "At a party, you hold a glass of champagne rather than a bottle or soda in a relaxed grip.", zh: "在派对上，比起拿着酒瓶或汽水，你更倾向于优雅地拿着一杯香槟。", es: "En una fiesta, sostienes una copa de champán en lugar de una botella o un refresco." } },
-            { id: 3, v: 'A', t: { en: "You prioritize velvet textures and soft lamps over raw architectural lines and high-energy pulses.", zh: "比起粗犷的现代建筑线条，你更看重天鹅绒质感和柔和的灯光。", es: "Priorizas las texturas de terciopelo y las lámparas tenues sobre las líneas arquitectónicas crudas." } },
-            { id: 4, v: 'A', t: { en: "Your ideal Saturday night involves a curated multi-course dinner rather than an exclusive urban pop-up.", zh: "你理想的周六晚上是享用精心准备的晚宴，而不是参加都市派对活动。", es: "Tu noche de sábado ideal incluye una cena de varios platos curada en lugar de una tienda pop-up urbana." } },
-            { id: 5, v: 'A', t: { en: "You feel more 'yourself' in a tailored blazer or silk dress than in an oversized hoodie and sneakers.", zh: "穿上修身西装或者小黑裙比穿oversize连帽衫让你感到更自在。", es: "Te sientes más 'tú mismo' con un blazer a medida o un vestido de seda que con una sudadera oversized." } },
-            { id: 6, v: 'A', t: { en: "If you won the lottery, you’d buy a penthouse overlooking the city before a multi-level modern loft.", zh: "你会先买一套俯瞰市中心的顶层大平层公寓，而不是豪华多层现代LOFT。", es: "Si ganaras la lotería, comprarías un ático con vistas a la ciudad antes que un loft moderno." } },
-            { id: 7, v: 'A', t: { en: "You prefer the sound of a crackling fireplace over the muffled bass of a nearby block party.", zh: "你更喜欢壁炉里噼啪作响的声音，而不是街区派对的低音。", es: "Prefieres el sonido de una chimenea crepitante sobre el bajo de una fiesta de barrio." } },
-            { id: 8, v: 'A', t: { en: "You want a private chauffeur service rather than driving yourself through neon-lit streets.", zh: "你想要私人司机服务，而不是亲自驾驶。", es: "Prefieres un servicio de chófer privado en lugar de conducir tú mismo por calles de neón." } },
-            { id: 9, v: 'A', t: { en: "You gravitate toward 'expensive, elegant and chic' aesthetics rather than 'clubby, street, brat-ish' trends.", zh: "你更向往“优雅时髦”的美学，而不是俱乐部或者街头潮流。", es: "Te inclinas hacia una estética 'elegante y chic' en lugar de tendencias callejeras o rebeldes." } },
-            { id: 10, v: 'A', t: { en: "Your favorite scent profile is 'Expensive Florals/oud' rather than 'Fresh Rain/Earth/laundry'.", zh: "你最喜欢的香氛是“名贵花卉/乌木”，而不是“雨后清新/泥土/洗衣粉”。", es: "Tu aroma favorito es 'Florales Caros' en lugar de 'Lluvia Fresca o Tierra'." } },
-            { id: 11, v: 'P', t: { en: "If a waiter gets your order wrong twice, you firmly send it back instead of accepting it to avoid a scene.", zh: "如果服务员两次弄错点单，你会坚决退回,而不是为了避免尴尬而接受。", es: "Si un camarero se equivoca en tu pedido dos veces, lo devuelves firmemente." } },
-            { id: 12, v: 'P', t: { en: "You wouldn't be caught dead at the grocery store in your pajamas; presentation is a matter of self-respect.", zh: "你绝不会穿着睡衣出现在超市；形象是自尊的问题。", es: "No te dejarías ver en el supermercado en pijama; la presentación es respeto propio." } },
-            { id: 13, v: 'P', t: { en: "You believe that being 'extra' is just another word for having high standards.", zh: "你认为“浮夸”只是高标准的另一种说法。", es: "Crees que ser 'extra' es solo otra palabra para tener estándares altos." } },
-            { id: 14, v: 'P', t: { en: "When you enter a room, you expect people to notice your presence immediately.", zh: "当你进入一个房间时，你期待人们能立即注意到你的存在。", es: "Cuando entras en una habitación, esperas que la gente note tu presencia de inmediato." } },
-            { id: 15, v: 'P', t: { en: "You prefer to be admired from a distance rather than being everyone’s 'best friend'.", zh: "你更喜欢被保持距离地崇拜，而不是做大家的好好朋友。", es: "Prefieres ser admirado desde la distancia en lugar de ser el 'mejor amigo' de todos." } },
-            { id: 16, v: 'P', t: { en: "You treat your birthday like a national holiday that lasts at least a week.", zh: "你把自己的生日当成一个星期的庆典来对待。", es: "Tratas tu cumpleaños como una fiesta nacional que dura al menos una semana." } },
-            { id: 17, v: 'P', t: { en: "You would rather be called 'Iconic' than 'Relatable'.", zh: "你宁愿被称为“传奇”，也不愿被称为“平易近人”。", es: "Preferirías que te llamaran 'Icónico' en lugar de 'Cercano'." } },
-            { id: 18, v: 'P', t: { en: "You have a specific 'lighting' or 'angle' you prefer when people take your photo.", zh: "拍照时，你有特定的“光线”或“角度”偏好。", es: "Tienes una 'iluminación' o 'ángulo' específico que prefieres para las fotos." } },
-            { id: 19, v: 'P', t: { en: "You find it difficult to admit when you are wrong because you pride yourself on being right.", zh: "你发现很难承认错误，因为你以始终正确为荣。", es: "Te resulta difícil admitir cuando te equivocas porque te enorgulleces de tener razón." } },
-            { id: 20, v: 'P', t: { en: "You believe that 'less is more' is a lie; 'more is more'.", zh: "你相信“多才是多”，而不是“少即是多”。", es: "Crees que 'menos es más' es una mentira; 'más es más'." } },
-            { id: 21, v: 'L', t: { en: "You are naturally a day-time person who feels most energetic before sunset.", zh: "你天生是个白天型选手，在日落前感到最有活力。", es: "Eres naturalmente una persona diurna que tiene más energía antes del atardecer." } },
-            { id: 22, v: 'L', t: { en: "You prefer bright, white-walled spaces over 'moody' or dim lighting.", zh: "比起昏暗、氛围感的灯光，你更喜欢明亮、白墙的空间。", es: "Prefieres espacios brillantes de paredes blancas sobre una iluminación tenue." } },
-            { id: 23, v: 'L', t: { en: "Your social media feed is full of bright colors rather than 'dark academia' or nocturnal vibes.", zh: "你的审美更倾向明亮色彩而非黑暗氛围。", es: "Tu feed de redes sociales está lleno de colores brillantes en lugar de vibras nocturnas." } },
-            { id: 24, v: 'L', t: { en: "You are an optimist who genuinely believes things happen for a reason.", zh: "你是个乐观主义者，相信一切发生皆有原因。", es: "Eres un optimista que cree genuinamente que las cosas suceden por una razón." } },
-            { id: 25, v: 'L', t: { en: "When stressed, you go for a walk in the sun rather than retreating to a dark room.", zh: "压力大时，你会去晒太阳而不是躲进黑屋子。", es: "Cuando estás estresado, sales a caminar al sol en lugar de retirarte a una habitación oscura." } },
-            { id: 26, v: 'L', t: { en: "You find 'wholesome' activities like brunch more fulfilling than late-night clubbing.", zh: "早午餐等阳间活动比深夜蹦迪更让你满足。", es: "Encuentras las actividades como el brunch más satisfactorias que salir de fiesta tarde." } },
-            { id: 27, v: 'L', t: { en: "You prefer wearing white or bright colors over black or deep jewel tones.", zh: "你更喜欢穿白色或鲜艳的颜色而非黑色或深色。", es: "Prefieres usar blanco o colores brillantes en lugar de negro o tonos oscuros." } },
-            { id: 28, v: 'L', t: { en: "You are the person who tries to cheer everyone up during a crisis.", zh: "危机时刻，你总是那个试图让大家振作的人。", es: "Eres la persona que intenta animar a todos durante una crisis." } },
-            { id: 29, v: 'L', t: { en: "An outdoor music picnic is better than a midnight party downtown.", zh: "户外音乐野餐优于午夜派对。", es: "Un picnic con música al aire libre es mejor que una fiesta a medianoche." } },
-            { id: 30, v: 'L', t: { en: "You believe the truth should always be brought into the light, even if uncomfortable.", zh: "真相总该大白于天下。", es: "Crees que la verdad siempre debe salir a la luz, incluso si es incómoda." } },
-            { id: 31, v: 'V', t: { en: "When you are angry, you raise your voice to ensure you are heard.", zh: "生气时，你会提高嗓门以确保你的声音被听到。", es: "Cuando estás enojado, levantas la voz para asegurarte de que te escuchen." } },
-            { id: 32, v: 'V', t: { en: "You tell stories with dramatic gestures and a loud presence.", zh: "你讲故事时总是手舞足蹈。", es: "Cuentas historias con gestos dramáticos y una presencia ruidosa." } },
-            { id: 33, v: 'V', t: { en: "If you have a secret, you find it very hard not to tell at least one person immediately.", zh: "你很难守住一个秘密不立刻分享。", es: "Si tienes un secreto, te resulta muy difícil no contárselo a alguien de inmediato." } },
-            { id: 34, v: 'V', t: { en: "You prefer to confront problems head-on rather than via a subtle text.", zh: "你直面问题而不是发委婉短信。", es: "Prefieres confrontar los problemas de frente en lugar de hacerlo por mensaje." } },
-            { id: 35, v: 'V', t: { en: "Your laugh can be heard from across a crowded restaurant.", zh: "在餐厅里老远都能听到你的笑声。", es: "Tu risa se puede escuchar desde el otro lado de un restaurante lleno." } },
-            { id: 36, v: 'V', t: { en: "You would rather give a public speech than have a one-on-one heart-to-heart.", zh: "比起私下开诚布公、推心置腹，你更愿意做公开演讲。", es: "Preferirías dar un discurso público que tener una charla privada de corazón a corazón." } },
-            { id: 37, v: 'V', t: { en: "You express love through grand gestures rather than small acts of service.", zh: "你更愿意通过宏大浪漫的举动而不是日常的小细节来表达爱。", es: "Expresas amor a través de grandes gestos en lugar de pequeños actos de servicio." } },
-            { id: 38, v: 'V', t: { en: "You want your legacy to be 'impactful and loud' rather than 'subtle and mysterious'.", zh: "你更希望你的精神遗产是震撼且响亮的，而不是微妙且神秘的。", es: "Quieres que tu legado sea 'impactante y ruidoso' en lugar de 'sutil y misterioso'." } },
-            { id: 39, v: 'V', t: { en: "When you win at something, you want the whole world to know about it.", zh: "赢得成就时，你希望全世界都知道。", es: "Cuando ganas en algo, quieres que todo el mundo se entere." } },
-            { id: 40, v: 'V', t: { en: "You believe if you have a 'gift', you should show it off as much as possible.", zh: "如果你有天赋，就该展示它。", es: "Crees que si tienes un 'don', debes presumirlo lo más posible." } }
-        ];
+    <div id="result-page">
+        <h2 id="result-header" style="font-weight: 300; margin-bottom: 1.5rem; opacity: 0.7;">Your Sound is...</h2>
+        <div class="album-cover" id="album-img"></div>
+        <h1 id="album-title"></h1>
+        <div class="archetype" id="archetype-text"></div>
+        <div class="description" id="album-desc"></div>
+        <button class="btn" style="margin-top: 2.5rem;" onclick="location.reload()" id="restart-btn">Retake Test</button>
+    </div>
+</div>
 
-        const albums = [
-            { code: "LDYB", name: "Mariah Carey (1990)", arc: "The Pure Legend", desc: { en: "The voice that started it all. You represent power and timeless tradition.", zh: "开启一切的声音。你代表了力量和永恒的传统。", es: "La voz que lo inició todo. Representas el poder y la tradición atemporal." } },
-            { code: "LDNB", name: "Emotions", arc: "The Soulful Virtuoso", desc: { en: "Technical mastery and deep soul. You value depth over simple trends.", zh: "技术上的精湛与深沉的灵魂。你重视深度而非简单的潮流。", es: "Maestría técnica y alma profunda. Valoras la profundidad." } },
-            { code: "LGYB", name: "Music Box", arc: "The Global Sweetheart", intensity: "high", desc: { en: "Sweet and universally resonant. You possess a comforting, melodic spirit.", zh: "甜美且广受共鸣。你拥有一种令人安心且悦耳的灵魂。", es: "Dulce y universalmente resonante. Posees un espíritu melódico." } },
-            { code: "LGYB", name: "Merry Christmas", arc: "The Eternal Guardian", intensity: "low", desc: { en: "Keeping traditions alive. You are a source of joy and festive warmth.", zh: "守护传统。你是快乐和节日温暖的源泉。", es: "Manteniendo vivas las tradiciones. Eres una fuente de alegría." } },
-            { code: "SGYB", name: "Daydream", arc: "The Visionary Pioneer", desc: { en: "Perfect fusion of pop and street. You are evolving and free-spirited.", zh: "流行与街头的完美融合。你正在进化且向往自由。", es: "Fusión perfecta de pop y calle. Eres evolutivo y de espíritu libre." } },
-            { code: "SGNW", name: "Glitter", arc: "The Retro Dreamer", intensity: "high", desc: { en: "Boldly vintage and misunderstood. You follow your own unique beat.", zh: "大胆复古且曾被误解。你追随属于自己独特的节拍。", es: "Audazmente vintage e incomprendido. Sigues tu propio ritmo." } },
-            { code: "SGNW", name: "Butterfly", arc: "The Liberated Spirit", intensity: "low", desc: { en: "Ultimate metamorphosis. You have found your wings and your own truth.", zh: "终极蜕变。你已经找到了翅膀和真实的自我。", es: "Metamorfosis definitiva. Encontraste tus alas y tu propia verdad." } },
-            { code: "SGYW", name: "Rainbow", arc: "The Resilient Prism", desc: { en: "Vibrant and diverse. You find strength in color and hope after storms.", zh: "充满活力且多样化。你在色彩中寻找力量，在风暴后寻找希望。", es: "Vibrante y diverso. Encuentras fuerza y esperanza tras las tormentas." } },
-            { code: "SDYW", name: "Memoirs of an Imperfect Angel", arc: "The Witty Architect", intensity: "high", desc: { en: "Sassy and calculated. You tell your story with humor and sharp detail.", zh: "机敏且深思虑。你用幽默和敏锐的细节讲述自己的故事。", es: "Atrevido y calculado. Cuentas tu historia con humor." } },
-            { code: "SDYW", name: "Charmbracelet", arc: "The Intimate Healer", intensity: "low", desc: { en: "Personal and whispered. You value deep, subtle emotional connections.", zh: "私人且细腻。你重视深层次、微妙的情感连接。", es: "Personal y susurrado. Valoras las conexiones emocionales sutiles." } },
-            { code: "SDNB", name: "The Emancipation of Mimi", arc: "The Triumphant Return", desc: { en: "Victory and celebration. You are the life of the party and a master of comebacks.", zh: "胜利与庆典。你是派对的核心，也是东山再起的大师。", es: "Victoria y celebración. Eres el alma de la fiesta." } },
-            { code: "SDNW", name: "Caution", arc: "The Modern Maven", intensity: "low", desc: { en: "Sleek and sophisticated. You lead with a steady, modern confidence.", zh: "时尚且精致。你以稳健、现代的自信引领潮流。", es: "Elegante y sofisticado. Lideras con una confianza moderna." } },
-            { code: "SDNW", name: "E=MC²", arc: "The Radiant Heiress", intensity: "high", desc: { en: "Bright and unstoppable. You are enjoying the peak of your powers.", zh: "明亮且不可阻挡。你正享受着力量的巅峰。", es: "Brillante e imparable. Disfrutas de la cima de tu poder." } },
-            { code: "SDYB", name: "Me. I Am Mariah...", arc: "The Elusive Puzzle", desc: { en: "Eclectic and artistic. You are a masterpiece still in development.", zh: "兼收并蓄且富有艺术气息。你是一件仍在创作中的杰作。", es: "Ecléctico y artístico. Eres una obra maestra en desarrollo." } },
-            { code: "LDYW", name: "Merry Christmas II You", arc: "The Theatrical Soul", intensity: "low", desc: { en: "Grand warmth and festive drama. You bring cinematic flair to tradition.", zh: "宏大的温暖和节日的戏剧感。你为传统带来了电影般的魅力。", es: "Gran calidez y drama festivo. Aportas estilo cinematográfico." } },
-            { code: "LDYW", name: "Here For It All (Special)", arc: "The Definitive Icon", intensity: "high", desc: { en: "The ultimate legacy. You sit on the throne of your own incredible life.", zh: "终极传奇。你坐在属于自己精彩人生的王座之上。", es: "El legado definitivo. Te sientas en el trono de tu propia vida." } }
-        ];
+<script>
+    const questions = [
+        { id: 1, text: { en: "You choose a hotel with a historic marble lobby and jazz bar over a modern minimalist installation.", zh: "相比现代极简主义酒店，你更喜欢拥有历史感大理石大堂和爵士酒吧的酒店。", es: "Prefieres un hotel con un vestíbulo de mármol histórico y un bar de jazz antes que una instalación moderna y minimalista." }, vector: 'Atmosphere' },
+        { id: 2, text: { en: "At a party, you hold a glass of champagne rather than a bottle or soda in a relaxed grip.", zh: "在派对上，比起拿着酒瓶或汽水，你更倾向于优雅地拿着一杯香槟。", es: "En una fiesta, sostienes una copa de champán en lugar de una botella o un refresco." }, vector: 'Atmosphere' },
+        { id: 3, text: { en: "You prioritize velvet textures and soft lamps over raw architectural lines and high-energy pulses.", zh: "比起粗犷的现代建筑线条，你更看重天鹅绒质感和柔和的灯光。", es: "Priorizas las texturas de terciopelo y las lámparas tenues sobre las líneas arquitectónicas crudas." }, vector: 'Atmosphere' },
+        { id: 4, text: { en: "Your ideal Saturday night involves a curated multi-course dinner rather than an exclusive urban pop-up.", zh: "你理想的周六晚上是享用精心准备的晚宴，而不是参加都市派对活动。", es: "Tu noche de sábado ideal incluye una cena de varios platos curada en lugar de una tienda pop-up urbana." }, vector: 'Atmosphere' },
+        { id: 5, text: { en: "You feel more 'yourself' in a tailored blazer or silk dress than in an oversized hoodie and sneakers.", zh: "穿上修身西装或者小黑裙比穿oversize连帽衫让你感到更自在。", es: "Te sientes más 'tú mismo' con un blazer a medida o un vestido de seda que con una sudadera oversized." }, vector: 'Atmosphere' },
+        { id: 6, text: { en: "If you won the lottery, you’d buy a penthouse overlooking the city before a multi-level modern loft.", zh: "你会先买一套俯瞰市中心的顶层大平层公寓，而不是豪华多层现代LOFT。", es: "Si ganaras la lotería, comprarías un ático con vistas a la ciudad antes que un loft moderno." }, vector: 'Atmosphere' },
+        { id: 7, text: { en: "You prefer the sound of a crackling fireplace over the muffled bass of a nearby block party.", zh: "你更喜欢壁炉里噼啪作响的声音，而不是街区派对的低音。", es: "Prefieres el sonido de una chimenea crepitante sobre el bajo de una fiesta de barrio." }, vector: 'Atmosphere' },
+        { id: 8, text: { en: "You want a private chauffeur service rather than driving yourself through neon-lit streets.", zh: "你想要私人司机服务，而不是亲自驾驶。", es: "Prefieres un servicio de chófer privado en lugar de conducir tú mismo por calles de neón." }, vector: 'Atmosphere' },
+        { id: 9, text: { en: "You gravitate toward 'expensive, elegant and chic' aesthetics rather than 'clubby, street, brat-ish' trends.", zh: "你更向往“优雅时髦”的美学，而不是俱乐部或者街头潮流。", es: "Te inclinas hacia una estética 'elegante y chic' en lugar de tendencias callejeras o rebeldes." }, vector: 'Atmosphere' },
+        { id: 10, text: { en: "Your favorite scent profile is 'Expensive Florals/oud' rather than 'Fresh Rain/Earth/laundry'.", zh: "你最喜欢的香氛是“名贵花卉/乌木”，而不是“雨后清新/泥土/洗衣粉”。", es: "Tu aroma favorito es 'Florales Caros' en lugar de 'Lluvia Fresca o Tierra'." }, vector: 'Atmosphere' },
+        { id: 11, text: { en: "If a waiter gets your order wrong twice, you firmly send it back instead of accepting it to avoid a scene.", zh: "如果服务员两次弄错点单，你会坚决退回,而不是为了避免尴尬而接受。", es: "Si un camarero se equivoca en tu pedido dos veces, lo devuelves firmemente." }, vector: 'Persona' },
+        { id: 12, text: { en: "You wouldn't be caught dead at the grocery store in your pajamas; presentation is a matter of self-respect.", zh: "你绝不会穿着睡衣出现在超市；形象是自尊的问题。", es: "No te dejarías ver en el supermercado en pijama; la presentación es respeto propio." }, vector: 'Persona' },
+        { id: 13, text: { en: "You believe that being 'extra' is just another word for having high standards.", zh: "你认为“浮夸”（extra）只是高标准的另一种说法。", es: "Crees que ser 'extra' es solo otra palabra para tener estándares altos." }, vector: 'Persona' },
+        { id: 14, text: { en: "When you enter a room, you expect people to notice your presence immediately.", zh: "当你进入一个房间时，你期待人们能立即注意到你的存在。", es: "Cuando entras en una habitación, esperas que la gente note tu presencia de inmediato." }, vector: 'Persona' },
+        { id: 15, text: { en: "You prefer to be admired from a distance rather than being everyone’s 'best friend'.", zh: "你更喜欢被保持距离地崇拜，而不是做大家的好好朋友。", es: "Prefieres ser admirado desde la distancia en lugar de ser el 'mejor amigo' de todos." }, vector: 'Persona' },
+        { id: 16, text: { en: "You treat your birthday like a national holiday that lasts at least a week.", zh: "你把自己的生日当成一个星期的庆典来对待。", es: "Tratas tu cumpleaños como una fiesta nacional que dura al menos una semana." }, vector: 'Persona' },
+        { id: 17, text: { en: "You would rather be called 'Iconic' than 'Relatable'.", zh: "你宁愿被称为“传奇”，也不愿被称为“平易近人”。", es: "Preferirías que te llamaran 'Icónico' en lugar de 'Cercano'." }, vector: 'Persona' },
+        { id: 18, text: { en: "You have a specific 'lighting' or 'angle' you prefer when people take your photo.", zh: "拍照时，你有特定的“光线”或“角度”偏好。", es: "Tienes una 'iluminación' o 'ángulo' específico que prefieres para las fotos." }, vector: 'Persona' },
+        { id: 19, text: { en: "You find it difficult to admit when you are wrong because you pride yourself on being right.", zh: "你发现很难承认错误，因为你以始终正确为荣。", es: "Te resulta difícil admitir cuando te equivocas porque te enorgulleces de tener razón." }, vector: 'Persona' },
+        { id: 20, text: { en: "You believe that 'less is more' is a lie; 'more is more'.", zh: "你相信“多才是多”，而不是“少即是多”。", es: "Crees que 'menos es más' es una mentira; 'más es más'." }, vector: 'Persona' },
+        { id: 21, text: { en: "You are naturally a day-time person who feels most energetic before sunset.", zh: "你天生是个白天型选手，在日落前感到最有活力。", es: "Eres naturalmente una persona diurna que tiene más energía antes del atardecer." }, vector: 'Light' },
+        { id: 22, text: { en: "You prefer bright, white-walled spaces over 'moody' or dim lighting.", zh: "比起灯光昏暗、氛围感的空间，你更喜欢明亮、通透的空间。", es: "Prefieres espacios brillantes de paredes blancas sobre una iluminación tenue." }, vector: 'Light' },
+        { id: 23, text: { en: "Your social media feed is full of bright colors rather than 'dark academia' or nocturnal vibes.", zh: "你的审美更倾向明亮色彩而非黑暗或夜行氛围。", es: "Tu feed de redes sociales está lleno de colores brillantes en lugar de vibras nocturnas." }, vector: 'Light' },
+        { id: 24, text: { en: "You are an optimist who genuinely believes things happen for a reason.", zh: "你是个乐观主义者，相信一切发生皆有原因。", es: "Eres un optimista que cree genuinamente que las cosas suceden por una razón." }, vector: 'Light' },
+        { id: 25, text: { en: "When stressed, you go for a walk in the sun rather than retreating to a dark room.", zh: "压力大时，你会去晒太阳而不是躲进黑屋子。", es: "Cuando estás estresado, sales a caminar al sol en lugar de retirarte a una habitación oscura." }, vector: 'Light' },
+        { id: 26, text: { en: "You find 'wholesome' activities like brunch more fulfilling than late-night clubbing.", zh: "早午餐等阳间活动比深夜蹦迪更让你满足。", es: "Encuentras las actividades como el brunch más satisfactorias que salir de fiesta tarde." }, vector: 'Light' },
+        { id: 27, text: { en: "You prefer wearing white or bright colors over black or deep jewel tones.", zh: "你更喜欢穿白色或鲜艳的颜色而非黑色或深色。", es: "Prefieres usar blanco o colores brillantes en lugar de negro o tonos oscuros." }, vector: 'Light' },
+        { id: 28, text: { en: "You are the person who tries to cheer everyone up during a crisis.", zh: "危机时刻，你总是那个试图让大家振作的人。", es: "Eres la persona que intenta animar a todos durante una crisis." }, vector: 'Light' },
+        { id: 29, text: { en: "An outdoor music picnic is better than a midnight party downtown.", zh: "户外音乐野餐优于午夜派对。", es: "Un picnic con música al aire libre es mejor que una fiesta a medianoche." }, vector: 'Light' },
+        { id: 30, text: { en: "You believe the truth should always be brought into the light, even if uncomfortable.", zh: "真相总该大白于天下。", es: "Crees que la verdad siempre debe salir a la luz, incluso si es incómoda." }, vector: 'Light' },
+        { id: 31, text: { en: "When you are angry, you raise your voice to ensure you are heard.", zh: "生气时，你会提高嗓门以确保你的声音被听到。", es: "Cuando estás enojado, levantas la voz para asegurarte de que te escuchen." }, vector: 'Voice' },
+        { id: 32, text: { en: "You tell stories with dramatic gestures and a loud presence.", zh: "你讲故事时总是手舞足蹈。", es: "Cuentas historias con gestos dramáticos y una presencia ruidosa." }, vector: 'Voice' },
+        { id: 33, text: { en: "If you have a secret, you find it very hard not to tell at least one person immediately.", zh: "你很难守住一个秘密不立刻分享。", es: "Si tienes un secreto, te resulta muy difícil no contárselo a alguien de inmediato." }, vector: 'Voice' },
+        { id: 34, text: { en: "You prefer to confront problems head-on rather than via a subtle text.", zh: "你直面问题而不是发委婉短信。", es: "Prefieres confrontar los problemas de frente en lugar de hacerlo por mensaje." }, vector: 'Voice' },
+        { id: 35, text: { en: "Your laugh can be heard from across a crowded restaurant.", zh: "在餐厅里老远都能听到你的笑声。", es: "Tu risa se puede escuchar desde el otro lado de un restaurante lleno." }, vector: 'Voice' },
+        { id: 36, text: { en: "You would rather give a public speech than have a one-on-one heart-to-heart.", zh: "比起私下开诚布公、推心置腹，你更愿意做公开演讲。", es: "Preferirías dar un discurso público que tener una charla privada de corazón a corazón." }, vector: 'Voice' },
+        { id: 37, text: { en: "You express love through grand gestures rather than small acts of service.", zh: "你更愿意通过宏大浪漫的举动而不是日常的小细节来表达爱。", es: "Expresas amor a través de grandes gestos en lugar de pequeños actos de servicio." }, vector: 'Voice' },
+        { id: 38, text: { en: "You want your legacy to be 'impactful and loud' rather than 'subtle and mysterious'.", zh: "你更希望你的精神遗产是震撼且响亮的，而不是微妙且神秘的。", es: "Quieres que tu legado sea 'impactante y ruidoso' en lugar de 'sutil y misterioso'." }, vector: 'Voice' },
+        { id: 39, text: { en: "When you win at something, you want the whole world to know about it.", zh: "赢得成就时，你希望全世界都知道。", es: "Cuando ganas en algo, quieres que todo el mundo se entere." }, vector: 'Voice' },
+        { id: 40, text: { en: "You believe if you have a 'gift', you should show it off as much as possible.", zh: "如果你有天赋，就该锋芒毕露地展示它。", es: "Crees que si tienes un 'don', debes presumirlo lo más posible." }, vector: 'Voice' }
+    ];
 
-        // 彻底的映射表：确保每个专辑名都能对应到正确的文件名
-        const albumMap = {
-            "Mariah Carey (1990)": "90", 
-            "Emotions": "emotions", 
-            "Music Box": "musicbox", 
-            "Merry Christmas": "mc",
-            "Daydream": "daydream", 
-            "Glitter": "glitter", 
-            "Butterfly": "butterfly", 
-            "Rainbow": "rainbow",
-            "Memoirs of an Imperfect Angel": "memoirs", 
-            "Charmbracelet": "charm", 
-            "The Emancipation of Mimi": "mimi",
-            "Caution": "caution", 
-            "E=MC²": "emc2", 
-            "Me. I Am Mariah...": "iammariah",
-            "Merry Christmas II You": "mc2", 
-            "Here For It All (Special)": "future"
-        };
+    const albums = [
+        { name: "Mariah Carey (1990)", id: "90", code: "LDYB", archetype: { en: "The Pure Legend", zh: "纯粹传奇", es: "La Leyenda Pura" }, standards: [3.5, 3.9, 3.4, 3.9], desc: { en: "Your life is the blueprint of classic excellence. You represent the foundation and the undeniable standard of brilliance.", zh: "你的生命是经典卓越的蓝图。你代表了辉煌的根基和不可否认的高标准。", es: "Tu vida es el plano de la excelencia clásica. Representas los cimientos y el estándar innegable de la brillantez." } },
+        { name: "Emotions", id: "emotions", code: "LDNB", archetype: { en: "The Soulful Virtuoso", zh: "深情大师", es: "La Virtuosa del Alma" }, standards: [3.7, 3.5, 2.5, 4.0], desc: { en: "Deeply emotional and technically brilliant. You reach the highest peaks and deepest valleys of the human spirit.", zh: "情感深邃且技艺精湛。你触及了人类灵魂的最高巅峰和最深幽谷。", es: "Profundamente emocional y técnicamente brillante. Alcanzas las cimas más altas y los valles más profundos del espíritu humano." } },
+        { name: "Music Box", id: "musicbox", code: "LGYB", archetype: { en: "The Global Sweetheart", zh: "全球甜心", es: "La Dulce Universal" }, standards: [3.9, 2.0, 3.8, 3.8], desc: { en: "A timeless, universal presence. You bring comfort, light, and a sense of serenity to everyone you encounter.", zh: "永恒且普遍的存在。你为你遇到的每一个人带来安慰、光明和宁静感。", es: "Una presencia eterna y universal. Traes consuelo, luz y una sensación de serenidad a todos los que conoces." } },
+        { name: "Merry Christmas", id: "mc", code: "LGYB", archetype: { en: "The Eternal Guardian", zh: "永恒守护者", es: "La Guardiana Eterna" }, standards: [3.8, 2.2, 3.5, 3.8], desc: { en: "You are synonymous with tradition and joy. Your presence is an annual celebration of warmth.", zh: "你是传统与快乐的代名词。你的存在是一场关于温暖的年度盛宴。", es: "Eres sinónimo de tradición y alegría. Tu presencia es una celebración anual de calidez." } },
+        { name: "Daydream", id: "daydream", code: "SGYB", archetype: { en: "The Visionary Pioneer", zh: "梦幻先锋", es: "La Pionera Visionaria" }, standards: [2.8, 2.6, 3.5, 3.9], desc: { en: "The perfect balance of commercial grace and street-smart evolution. You are always one step ahead.", zh: "商业优雅与街头智慧进化的完美平衡。你总是领先一步。", es: "El equilibrio perfecto entre la gracia comercial y la evolución urbana. Siempre vas un paso por delante." } },
+        { name: "Glitter", id: "glitter", code: "SNMW", archetype: { en: "The Retro Dreamer", zh: "复古筑梦者", es: "La Soñadora Retro" }, standards: [2.2, 2.7, 2.2, 2.7], desc: { en: "Misunderstood but brilliantly vibrant. You live in a world of sparkle, defying conventions.", zh: "虽被误解但光彩夺目。你生活在一个闪耀的世界里，无视常规。", es: "Incomprendida pero brillantemente vibrante. Vives en un mundo de destellos, desafiando las convenciones." } },
+        { name: "Butterfly", id: "butterfly", code: "SNMW", archetype: { en: "The Liberated Spirit", zh: "自由之魂", es: "El Espíritu Liberado" }, standards: [2.7, 2.9, 2.6, 2.8], desc: { en: "You have found your wings. Your journey is one of freedom, vulnerability, and true self-expression.", zh: "你已找到了羽翼。你的旅程是关于自由、脆弱和真实自我表达的。", es: "Has encontrado tus alas. Tu viaje es uno de libertad, vulnerabilidad y verdadera expresión personal." } },
+        { name: "Rainbow", id: "rainbow", code: "SGYW", archetype: { en: "The Resilient Prism", zh: "坚韧棱镜", es: "El Prisma Resiliente" }, standards: [2.6, 2.8, 3.2, 2.7], desc: { en: "Color and hope. No matter the storm, you find the strength to shine with multifaceted brilliance.", zh: "色彩与希望。无论风暴如何，你总能找到以多面光彩闪耀的力量。", es: "Color y esperanza. Sin importar la tormenta, encuentras la fuerza para brillar con un resplandor polifacético." } },
+        { name: "Memoirs of an Imperfect Angel", id: "memoirs", code: "SDYW", archetype: { en: "The Witty Architect", zh: "机智建筑师", es: "La Arquitecta Ingeniosa" }, standards: [2.2, 4.0, 3.8, 2.7], desc: { en: "Sharp, cohesive, and incredibly observant. You tell stories with precision and sophisticated humor.", zh: "敏锐、连贯且极具观察力。你以精准和老练的幽默感诉说故事。", es: "Afilada, cohesiva e increíblemente observadora. Cuentas historias con precisión y un humor sofisticado." } },
+        { name: "Charmbracelet", id: "charm", code: "SDYW", archetype: { en: "The Intimate Healer", zh: "亲密愈疗者", es: "La Sanadora Íntima" }, standards: [2.0, 3.5, 3.4, 2.8], desc: { en: "Whispered secrets and delicate strength. You connect through intimacy and detailed nuances.", zh: "耳边的私语和细腻的力量。你通过亲密感和细节的细微差别与他人连接。", es: "Secretos susurrados y fuerza delicada. Conectas a través de la intimidad y los matices detallados." } },
+        { name: "The Emancipation of Mimi", id: "mimi", code: "SDNB", archetype: { en: "The Triumphant Return", zh: "凯旋女王", es: "El Regreso Triunfal" }, standards: [2.1, 4.1, 2.2, 3.9], desc: { en: "The ultimate comeback. You are powerful, celebratory, and ready to take your throne.", zh: "终极回归。你强大、喜悦，并准备好夺回属于你的王座。", es: "El regreso definitivo. Eres poderosa, celebrativa y estás lista para tomar tu trono." } },
+        { name: "Caution", id: "caution", code: "SDNW", archetype: { en: "The Modern Maven", zh: "摩登专家", es: "La Experta Moderna" }, standards: [2.1, 3.9, 2.2, 2.6], desc: { en: "Sleek, current, and cool. You value quality over quantity and move with effortless precision.", zh: "时髦、现代且酷。你追求质量而非数量，举手投足间尽显精准。", es: "Elegante, actual y genial. Valoras la calidad sobre la cantidad y te mueves con una precisión natural." } },
+        { name: "E=MC²", id: "emc2", code: "SDNW", archetype: { en: "The Radiant Heiress", zh: "闪耀继承者", es: "La Heredera Radiante" }, standards: [2.2, 3.7, 2.3, 2.7], desc: { en: "Bursting with energy and success. You are the formula for brilliance, radiating a magnetic glow.", zh: "充满活力与成功。你是光彩的方程式，散发着磁性的光芒。", es: "Rebosante de energía y éxito. Eres la fórmula de la brillantez, irradiando un brillo magnético." } },
+        { name: "Me. I Am Mariah...", id: "iammariah", code: "SDYB", archetype: { en: "The Elusive Puzzle", zh: "难解之谜", es: "El Rompecabezas Elusivo" }, standards: [2.5, 3.6, 3.6, 3.8], desc: { en: "A complex masterpiece of self-reflection. You are a puzzle that reveals new layers of artistry.", zh: "复杂的自我反思杰作。你是一个谜题，不断向外界揭示新的艺术层次。", es: "Una compleja obra maestra de autorreflexión. Eres un rompecabezas que revela nuevas capas de arte." } },
+        { name: "Here For It All", id: "future", code: "LDYW", archetype: { en: "The Definitive Icon", zh: "殿堂级偶像", es: "El Ícono Definitivo" }, standards: [3.5, 3.7, 3.5, 2.6], desc: { en: "The ultimate synthesis of legacy and presence. You represent the full spectrum of a legendary life.", zh: "传承与存在的终极综合。你代表了传奇人生的全光谱。", es: "La síntesis definitiva de legado y presencia. Representas todo el espectro de una vida legendaria." } },
+        { name: "Merry Christmas II You", id: "mc2", code: "LDYW", archetype: { en: "The Theatrical Soul", zh: "戏剧灵魂", es: "El Alma Teatral" }, standards: [3.8, 3.4, 3.4, 2.8], desc: { en: "Grand, festive, and full of character. You bring drama and warmth to every room.", zh: "宏大、喜庆且充满个性。你为每一个房间带来戏剧感和温暖。", es: "Grandiosa, festiva y llena de carácter. Traes drama y calidez a cada habitación." } }
+    ];
 
-        let lang = 'en';
-        let step = 0;
-        let scores = [];
-        let isResultView = false;
-        let currentResult = null;
+    const UI_TEXT = {
+        en: { title: "which Mariah Carey album are you?", subtitle: "the portrait of my life.", poem: "You look at me and see the girl\nWho lives inside the golden world\nBut don’t believe\nThat’s all there is to see\nYou’ll never know the real me", start: "Start the Portrait", back: "Back", restart: "Retake Test", header: "Your Sound is...", options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"] },
+        zh: { title: "你是玛丽亚凯莉的那张专辑?", subtitle: "the portrait of my life.", poem: "你看着我，以为看到了\n那个住在黄金世界里的女孩\n但请不要相信\n那是我的全部\n你永远无法了解真正的我", start: "开始测试", back: "返回", restart: "重新测试", header: "你的共鸣专辑是...", options: ["强烈不同意", "不同意", "中立", "同意", "强烈同意"] },
+        es: { title: "which Mariah Carey album are you?", subtitle: "the portrait of my life.", poem: "Me miras y ves a la chica\nQue vive dentro del mundo dorado\nPero no creas\nQue eso es todo lo que hay para ver\nNunca conocerás a mi verdadero yo", start: "Comenzar el Retrato", back: "Volver", restart: "Repetir Prueba", header: "Tu sonido es...", options: ["Muy en desacuerdo", "En desacuerdo", "Neutral", "De acuerdo", "Muy de acuerdo"] }
+    };
 
-        const i18n = {
-            en: { start: "ENTER THE WORLD", back: "← BACK", l: "Strongly Disagree", r: "Strongly Agree", retake: "RETAKE TEST" },
-            zh: { start: "开启旅程", back: "← 返回", l: "强烈反对", r: "非常赞同", retake: "重新测试" },
-            es: { start: "ENTRAR AL MUNDO", back: "← VOLVER", l: "Muy en desacuerdo", r: "Muy de acuerdo", retake: "REPETIR TEST" }
-        };
+    let currentLang = 'en';
+    let currentStep = 0;
+    let answers = [];
+    let finalAlbum = null;
 
-        function changeLang(l) {
-            lang = l;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.id === `btn-${l}`));
-            document.getElementById('lbl-left').innerText = i18n[l].l;
-            document.getElementById('lbl-right').innerText = i18n[l].r;
-            document.getElementById('btn-back').innerText = i18n[l].back;
-            document.getElementById('btn-retake').innerText = i18n[l].retake;
-            document.getElementById('btn-start').innerText = i18n[l].start;
-            if(!document.getElementById('test-screen').classList.contains('hidden')) render();
-            if(isResultView && currentResult) document.getElementById('res-body').innerText = currentResult.desc[lang];
+    function setLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-switcher span').forEach(s => s.classList.remove('active'));
+        document.getElementById(`lang-${lang}`).classList.add('active');
+        document.getElementById('title-text').innerText = UI_TEXT[lang].title;
+        document.getElementById('subtitle-text').innerText = UI_TEXT[lang].subtitle;
+        document.getElementById('intro-poem').innerText = UI_TEXT[lang].poem;
+        document.getElementById('start-btn').innerText = UI_TEXT[lang].start;
+        document.getElementById('back-btn').innerText = UI_TEXT[lang].back;
+        document.getElementById('restart-btn').innerText = UI_TEXT[lang].restart;
+        document.getElementById('result-header').innerText = UI_TEXT[lang].header;
+        UI_TEXT[lang].options.forEach((opt, idx) => { document.getElementById(`opt-${idx+1}`).innerText = opt; });
+        if (document.getElementById('quiz-page').style.display === 'block') updateQuestion();
+        if (finalAlbum) updateResultContent();
+    }
+
+    function startQuiz() {
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('quiz-page').style.display = 'block';
+        updateQuestion();
+    }
+
+    function updateQuestion() {
+        const q = questions[currentStep];
+        document.getElementById('question-text').innerText = q.text[currentLang];
+        document.getElementById('progress-fill').style.width = `${(currentStep / questions.length) * 100}%`;
+    }
+
+    function handleSelect(score) {
+        answers[currentStep] = score;
+        if (currentStep < questions.length - 1) {
+            currentStep++;
+            updateQuestion();
+        } else {
+            calculateResult();
         }
+    }
 
-        function startTest() {
-            document.getElementById('home-screen').classList.add('hidden');
-            document.getElementById('test-screen').classList.remove('hidden');
-            render();
+    function goBack() {
+        if (currentStep > 0) {
+            currentStep--;
+            updateQuestion();
+        } else {
+            document.getElementById('home-page').style.display = 'block';
+            document.getElementById('quiz-page').style.display = 'none';
         }
+    }
 
-        function render() {
-            document.getElementById('q-progress').innerText = `${step + 1} / 40`;
-            document.getElementById('q-display').innerText = questionBank[step].t[lang];
-        }
+    function calculateResult() {
+        let scores = { Atmosphere: 0, Persona: 0, Light: 0, Voice: 0 };
+        let counts = { Atmosphere: 0, Persona: 0, Light: 0, Voice: 0 };
+        questions.forEach((q, i) => { scores[q.vector] += answers[i]; counts[q.vector]++; });
+        const userAvg = [scores.Atmosphere/counts.Atmosphere, scores.Persona/counts.Persona, scores.Light/counts.Light, scores.Voice/counts.Voice];
+        let minVariance = Infinity;
+        let matched = null;
+        albums.forEach(album => {
+            let variance = 0;
+            album.standards.forEach((val, i) => { variance += Math.pow(val - userAvg[i], 2); });
+            if (variance < minVariance) { minVariance = variance; matched = album; }
+            else if (Math.abs(variance - minVariance) < 0.001) { if (album.code === matched.code) matched = resolveTie(matched, album, userAvg); }
+        });
+        finalAlbum = matched;
+        showResult();
+    }
 
-        function pick(val) {
-            scores[step] = val;
-            if(step < 39) { step++; render(); } 
-            else { calculateResults(); }
-        }
+    function resolveTie(a1, a2, user) {
+        const [atmo, pers, light, voice] = user;
+        if (a1.code === "LGYB") return (pers > 2.1 && light > 3.65) ? albums.find(a => a.id === "musicbox") : albums.find(a => a.id === "mc");
+        if (a1.code === "SNMW") return (atmo < 2.4 && light < 2.4) ? albums.find(a => a.id === "glitter") : albums.find(a => a.id === "butterfly");
+        if (a1.code === "SDYW") return (pers > 3.75 && light > 3.6) ? albums.find(a => a.id === "memoirs") : albums.find(a => a.id === "charm");
+        if (a1.code === "SDNW") return (atmo < 2.15 && voice < 2.65) ? albums.find(a => a.id === "caution") : albums.find(a => a.id === "emc2");
+        if (a1.code === "LDYW") return (pers > 3.55 && voice < 2.7) ? albums.find(a => a.id === "future") : albums.find(a => a.id === "mc2");
+        return a1;
+    }
 
-        function prevQ() {
-            if(step > 0) { step--; render(); }
-            else { 
-                document.getElementById('test-screen').classList.add('hidden');
-                document.getElementById('home-screen').classList.remove('hidden');
-            }
-        }
+    function showResult() {
+        document.getElementById('quiz-page').style.display = 'none';
+        document.getElementById('result-page').style.display = 'block';
+        updateResultContent();
+    }
 
-        function calculateResults() {
-            const totals = { A: 0, P: 0, L: 0, V: 0 };
-            questionBank.forEach((q, i) => totals[q.v] += scores[i]);
-            const means = { Atmo: totals.A/10, Pers: totals.P/10, Ligh: totals.L/10, Voic: totals.V/10 };
+    function updateResultContent() {
+        if (!finalAlbum) return;
+        document.getElementById('album-title').innerText = finalAlbum.name;
+        document.getElementById('archetype-text').innerText = finalAlbum.archetype[currentLang];
+        document.getElementById('album-desc').innerText = finalAlbum.desc[currentLang];
+        const imgDiv = document.getElementById('album-img');
+        imgDiv.style.backgroundImage = `url('${finalAlbum.id}.jpg')`;
+    }
 
-            let code = "";
-            code += (means.Atmo >= 3.0) ? "L" : "S";
-            code += (means.Pers >= 3.0) ? "D" : "G";
-            code += (means.Ligh >= 3.0) ? "Y" : "N";
-            code += (means.Voic >= 3.0) ? "B" : "W";
+    setLang('en');
+</script>
 
-            const matches = albums.filter(a => a.code === code);
-            let final = matches[0] || albums[0];
-
-            // Tie breakers
-            if (matches.length > 1) {
-                if (code === "LGYB") final = (means.Pers < 2.0) ? matches.find(a => a.intensity === 'high') : matches.find(a => a.intensity === 'low');
-                else if (code === "SGNW") final = (means.Atmo < 2.0) ? matches.find(a => a.intensity === 'high') : matches.find(a => a.intensity === 'low');
-                else if (code === "SDYW") final = (means.Pers > 4.0) ? matches.find(a => a.intensity === 'high') : matches.find(a => a.intensity === 'low');
-                else if (code === "SDNW") final = (means.Pers > 4.0) ? matches.find(a => a.intensity === 'high') : matches.find(a => a.intensity === 'low');
-                else if (code === "LDYW") final = (means.Pers > 4.5) ? matches.find(a => a.intensity === 'high') : matches.find(a => a.intensity === 'low');
-            }
-
-            currentResult = final;
-            showResult(final);
-        }
-
-        function showResult(res) {
-            isResultView = true;
-            document.getElementById('test-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            document.getElementById('res-title').innerText = res.name;
-            document.getElementById('res-arc-text').innerText = res.arc;
-            document.getElementById('res-body').innerText = res.desc[lang];
-            
-            // --- 核心修改部分：彻底解决映射 ---
-            
-            // 1. 获取对应的文件名 ID (例如 "butterfly")
-            const albumId = albumMap[res.name] || 'default';
-            
-            // 2. 拼接图片 URL。
-            // 假设您的图片放在当前目录下的 images 文件夹中，文件名为 ID + .jpg
-            const imageUrl = `./images/${albumId}.jpg`;
-            
-            const imgContainer = document.getElementById('res-img');
-            
-            // 设置背景图
-            imgContainer.style.backgroundImage = `url('${imageUrl}')`;
-            
-            // 3. 错误处理：如果图片不存在，显示一个备用的样式或文字
-            const imgTester = new Image();
-            imgTester.onload = function() {
-                console.log("Successfully loaded album art for: " + res.name);
-            };
-            imgTester.onerror = function() {
-                console.error("Failed to load: " + imageUrl + ". Please ensure the file exists in the /images/ folder.");
-                // 失败回退：显示一个带名字的占位图，防止页面空白
-                imgContainer.style.backgroundImage = `url('https://via.placeholder.com/600/111111/F7E7CE?text=${albumId.toUpperCase()}')`;
-            };
-            imgTester.src = imageUrl;
-        }
-    </script>
 </body>
 </html>
