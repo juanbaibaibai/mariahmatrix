@@ -60,12 +60,13 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(247, 231, 206, 0.1);
-            padding: 3rem;
+            padding: 3rem 2rem;
             border-radius: 24px;
             text-align: center;
             position: relative;
             box-shadow: 0 25px 60px rgba(0,0,0,0.6);
             z-index: 10;
+            margin: 20px auto;
         }
 
         h1 {
@@ -110,15 +111,16 @@
 
         .lang-switcher {
             position: absolute;
-            top: 25px;
-            right: 25px;
+            top: 15px;
+            right: 15px;
             display: flex;
             gap: 12px;
+            z-index: 20;
         }
 
         .lang-switcher span {
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             opacity: 0.5;
             transition: 0.3s;
         }
@@ -179,10 +181,13 @@
             transition: width 0.4s;
         }
 
-        #result-page { display: none; }
+        #result-page { display: none; width: 100%; }
+        
+        /* 修复：将固定宽度改为最大宽度，防止手机端偏移 */
         .album-cover {
-            width: 320px;
-            height: 320px;
+            max-width: 320px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
             margin: 0 auto 2rem;
             border: 1px solid rgba(247, 231, 206, 0.3);
             background-size: cover;
@@ -197,22 +202,21 @@
             font-weight: 300;
         }
 
-        /* 优化后的边框设计：去掉了生硬的左边框，改为优雅的卡片质感 */
         .description {
             line-height: 1.8;
-            text-align: center; /* 改为居中，增加平衡感 */
+            text-align: center;
             margin-top: 1.5rem;
             font-size: 1.05rem;
             background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
             padding: 2rem;
             border-radius: 20px;
-            border: 1px solid rgba(247, 231, 206, 0.15); /* 全包围细边框 */
+            border: 1px solid rgba(247, 231, 206, 0.15);
             box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.4);
             position: relative;
             overflow: hidden;
+            width: 100%; /* 确保填满父容器 */
         }
 
-        /* 增加顶部高光线，提升质感 */
         .description::before {
             content: "";
             position: absolute;
@@ -224,9 +228,12 @@
         }
 
         @media (max-width: 650px) {
+            .container { padding: 2.5rem 1.2rem; }
             .options { flex-direction: column; gap: 8px; }
-            .option { padding: 12px; flex-direction: row; gap: 15px; }
+            .option { padding: 12px; flex-direction: row; gap: 15px; text-align: left; }
+            .option b { margin-bottom: 0; }
             h1 { font-size: 1.6rem; }
+            .description { padding: 1.5rem 1rem; font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -276,7 +283,7 @@
 <script>
     const questions = [
         { id: 1, text: { en: "You choose a hotel with a historic marble lobby and jazz bar over a modern minimalist installation.", zh: "相比现代极简主义酒店，你更喜欢拥有历史感大理石大堂和爵士酒吧的酒店。", es: "Prefieres un hotel con un vestíbulo de mármol histórico y un bar de jazz antes que una instalación moderna y minimalista." }, vector: 'Atmosphere' },
-        { id: 2, text: { en: "At a party, you hold a glass of champagne rather than a bottle or soda in a relaxed grip.", zh: "在派对上，比起拿着酒瓶或汽水，你更倾向于优雅地拿着一杯香槟。", es: "En una fiesta, sostienes una copa de champán en lugar de una botella o un refresco." }, vector: 'Atmosphere' },
+        { id: 2, text: { en: "At a party, you hold a glass of champagne or whiskey rather than a bottle or soda in a relaxed grip.", zh: "在派对上，比起拿着酒瓶或汽水，你更倾向于优雅地拿着一杯香槟或者威士忌。", es: "En una fiesta, sostienes una copa de champán en lugar de una botella o un refresco." }, vector: 'Atmosphere' },
         { id: 3, text: { en: "You prioritize velvet textures and soft lamps over raw architectural lines and high-energy pulses.", zh: "比起粗犷的现代建筑线条，你更看重天鹅绒质感和柔和的灯光。", es: "Priorizas las texturas de terciopelo y las lámparas tenues sobre las líneas arquitectónicas crudas." }, vector: 'Atmosphere' },
         { id: 4, text: { en: "Your ideal Saturday night involves a curated multi-course dinner rather than an exclusive urban pop-up.", zh: "你理想的周六晚上是享用精心准备的晚宴，而不是参加都市派对活动。", es: "Tu noche de sábado ideal incluye una cena de varios platos curada en lugar de una tienda pop-up urbana." }, vector: 'Atmosphere' },
         { id: 5, text: { en: "You feel more 'yourself' in a tailored blazer or silk dress than in an oversized hoodie and sneakers.", zh: "穿上修身西装或者小黑裙比穿oversize连帽衫让你感到更自在。", es: "Te sientes más 'tú mismo' con un blazer a medida o un vestido de seda que con una sudadera oversized." }, vector: 'Atmosphere' },
@@ -296,8 +303,8 @@
         { id: 19, text: { en: "You find it difficult to admit when you are wrong because you pride yourself on being right.", zh: "你发现很难承认错误，因为你以始终正确为荣。", es: "Te resulta difícil admitir cuando te equivocas porque te enorgulleces de tener razón." }, vector: 'Persona' },
         { id: 20, text: { en: "You believe that 'less is more' is a lie; 'more is more'.", zh: "你相信“多才是多”，而不是“少即是多”。", es: "Crees que 'menos es más' es una mentira; 'más es más'." }, vector: 'Persona' },
         { id: 21, text: { en: "You are naturally a day-time person who feels most energetic before sunset.", zh: "你天生是个白天型选手，在日落前感到最有活力。", es: "Eres naturalmente una persona diurna que tiene más energía antes del atardecer." }, vector: 'Light' },
-        { id: 22, text: { en: "You prefer bright, white-walled spaces over 'moody' or dim lighting.", zh: "比起灯光昏暗、氛围感的空间，你更喜欢明亮、通透的空间。", es: "Prefieres espacios brillantes de paredes blancas sobre una iluminación tenue." }, vector: 'Light' },
-        { id: 23, text: { en: "Your social media feed is full of bright colors rather than 'dark academia' or nocturnal vibes.", zh: "你的审美更倾向明亮色彩而非黑暗或夜行氛围。", es: "Tu feed de redes sociales está lleno de colores brillantes en lugar de vibras nocturnas." }, vector: 'Light' },
+        { id: 22, text: { en: "You prefer bright, white-walled spaces over 'moody' or dim lighting.", zh: "比起有昏暗、氛围感灯光的空间，你更喜欢明亮、通透的空间。", es: "Prefieres espacios brillantes de paredes blancas sobre una iluminación tenue." }, vector: 'Light' },
+        { id: 23, text: { en: "Your social media feed is full of bright colors rather than 'dark academia' or nocturnal vibes.", zh: "你的审美更倾向明亮色彩而非黑暗氛围。", es: "Tu feed de redes sociales está lleno de colores brillantes en lugar de vibras nocturnas." }, vector: 'Light' },
         { id: 24, text: { en: "You are an optimist who genuinely believes things happen for a reason.", zh: "你是个乐观主义者，相信一切发生皆有原因。", es: "Eres un optimista que cree genuinamente que las cosas suceden por una razón." }, vector: 'Light' },
         { id: 25, text: { en: "When stressed, you go for a walk in the sun rather than retreating to a dark room.", zh: "压力大时，你会去晒太阳而不是躲进黑屋子。", es: "Cuando estás estresado, sales a caminar al sol en lugar de retirarte a una habitación oscura." }, vector: 'Light' },
         { id: 26, text: { en: "You find 'wholesome' activities like brunch more fulfilling than late-night clubbing.", zh: "早午餐等阳间活动比深夜蹦迪更让你满足。", es: "Encuentras las actividades como el brunch más satisfactorias que salir de fiesta tarde." }, vector: 'Light' },
@@ -358,7 +365,10 @@
         document.getElementById('back-btn').innerText = UI_TEXT[lang].back;
         document.getElementById('restart-btn').innerText = UI_TEXT[lang].restart;
         document.getElementById('result-header').innerText = UI_TEXT[lang].header;
-        UI_TEXT[lang].options.forEach((opt, idx) => { document.getElementById(`opt-${idx+1}`).innerText = opt; });
+        UI_TEXT[lang].options.forEach((opt, idx) => { 
+            const el = document.getElementById(`opt-${idx+1}`);
+            if(el) el.innerText = opt; 
+        });
         if (document.getElementById('quiz-page').style.display === 'block') updateQuestion();
         if (finalAlbum) updateResultContent();
     }
